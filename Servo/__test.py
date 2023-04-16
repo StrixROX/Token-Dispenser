@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import RPi.GPIO as GPIO
-import time
 
 # For Futaba S3003 Servo
 
@@ -13,14 +12,13 @@ freq = 50.0 # PWM frequency
 servo = GPIO.PWM(PWM,freq)
 
 # after accounting for error
-dc_min = 3.35
-dc_neut = 7.5
-dc_max = 11.8
+dc_min = 3.30
+dc_neut = 7.45
+dc_max = 11.80
 
 servo.start(dc_neut)
 print("Servo set to neutral position.")
 print("Waiting for 1 second")
-time.sleep(1)
 
 def cleanup():
     print("Cleaning up")
