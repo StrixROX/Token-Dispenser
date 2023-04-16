@@ -1,4 +1,4 @@
-import Servo
+from Servo import ServoController as Servo
 import time
 
 myServo = Servo(PWM=32, freq=50, dc_min=3.30, dc_neut=7.45, dc_max=11.80)
