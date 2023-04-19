@@ -1,1 +1,2 @@
--r /servo/requirements.txt
+-r /Servo/requirements.txt
+-r /Scanner/requirements.txt
