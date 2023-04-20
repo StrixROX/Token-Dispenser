@@ -32,6 +32,8 @@ class Scanner:
     self.serialMsgStart = SerialMessage('<qr>')
     self.serialMsgEnd = SerialMessage('</qr>')
 
+    self.is_ready = False
+
     self.__serialConnect()
   
   def __serialConnect(self):
@@ -44,9 +46,11 @@ class Scanner:
         print("! SerialException occured.")
         print("Trying again...\n")
         time.sleep(1)
+        self.is_ready = False
 
     if self.ser.is_open:
       print("! Scanner ready.\n")
+      self.is_ready = True
   
   def readNext(self):
     if self.ser is None or not self.ser.is_open:
@@ -75,3 +79,5 @@ class Scanner:
   def close(self):
     if self.ser is not None:
       self.ser.close()
+    
+    self.is_ready = False
