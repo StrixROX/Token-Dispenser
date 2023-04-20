@@ -26,11 +26,8 @@ while servo.is_ready and scanner.is_ready:
   scan = scanner.readNext()
 
   if scan.status == 1:
-    if lastValidScan is None:
+    if lastValidScan is None and scan != lastValidScan:
       lastValidScan = scan
       print(scan)
     elif scan.data == lastValidScan:
       handleDuplicateScan()
-    else:
-      lastValidScan = scan
-      print(scan)
