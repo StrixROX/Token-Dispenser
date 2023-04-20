@@ -28,8 +28,9 @@ class ServoController:
 
         self.servo = GPIO.PWM(self.PWM, self.freq)
         self.servo.start(self.dc_neut)
+        print("Servo ready.")
         print("Servo set to neutral position.")
-        print("Waiting for 1 second")
+        print("Waiting for 1 second...")
         time.sleep(1)
 
     def cleanup(self):
