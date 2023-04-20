@@ -3,7 +3,6 @@ from Scanner import Scanner
 import time
 import os
 
-# myServo = Servo(PWM=32, freq=50, dc_min=3.30, dc_neut=7.45, dc_max=11.80)
 myServo = Servo(
   PWM=os.environ['SERVO_PWM_PIN'],
   freq=os.environ['SERVO_PWM_FREQ'],
@@ -28,7 +27,6 @@ time.sleep(1)
 myServo.cleanup()
 
 # scanner testing code
-# myScanner = Scanner('COM4', 115200)
 myScanner = Scanner(os.environ['SCANNER_PORT'], os.environ['SCANNER_BAUDRATE'])
 
 prevScan = None
