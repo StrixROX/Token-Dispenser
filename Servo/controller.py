@@ -15,7 +15,7 @@ dc_max = 11.80
 '''
 
 class ServoController:
-    def __init__(self, PWM, freq, dc_min, dc_neut, dc_max):
+    def __init__(self, PWM:int, freq:int, dc_min:float, dc_neut:float, dc_max:float):
         self.PWM = PWM
         self.freq = freq
         self.dc_min = dc_min
@@ -38,7 +38,7 @@ class ServoController:
         GPIO.cleanup()
         print("Cleanup complete.")
 
-    def setAngle(self, deg):
+    def setAngle(self, deg:float):
         deg = min(max(deg - 90, -90), 90) # limiting value between -90 and 90
 
         # this style of code allows us to use different
