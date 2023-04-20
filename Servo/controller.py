@@ -33,6 +33,8 @@ class ServoController:
         print("Waiting for 1 second...")
         time.sleep(1)
 
+        return self
+
     def cleanup(self):
         print("Cleaning up...")
         self.servo.stop()
