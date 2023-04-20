@@ -7,14 +7,16 @@ void onQrCodeTask(void* pvParameters) {
 
   while (true) {
     if (reader.receiveQrCode(&qrCodeData, 100)) {
+      Serial.print("<qr>");
       if (qrCodeData.valid) {
-        Serial.println("Payload");
-        Serial.println((const char*)qrCodeData.payload);
+        Serial.print("1");
+        Serial.print((const char*)qrCodeData.payload);
       }
       else {
-        Serial.println("Error");
-        Serial.println((const char*)qrCodeData.payload);
+        Serial.print("0");
+        Serial.print((const char*)qrCodeData.payload);
       }
+      Serial.print("</qr>");
     }
     vTaskDelay(100 / portTICK_PERIOD_MS);
   }
