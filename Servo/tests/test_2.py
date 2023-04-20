@@ -1,4 +1,4 @@
-from .controller import ServoController as Servo
+from ..controller import ServoController as Servo
 import time
 
 servo = Servo(PWM=32, freq=50, dc_min=3.30, dc_neut=7.45, dc_max=11.80)
