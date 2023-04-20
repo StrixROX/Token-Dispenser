@@ -1,8 +1,8 @@
 from Servo import ServoController as Servo
 from Scanner import Scanner
+import helpers
 
 import os
-import time
 
 servo = Servo(
   PWM=int(os.environ['SERVO_PWM_PIN']),
@@ -17,9 +17,6 @@ scanner = Scanner(
   baudrate=str(os.environ['SCANNER_BAUDRATE'])
 )
 
-def handleDuplicateScan():
-  print("QR already scanned.")
-
 lastValidScan = None
 scanCount = 0
 while servo.is_ready and scanner.is_ready:
@@ -28,6 +25,6 @@ while servo.is_ready and scanner.is_ready:
   if scan.status == 1:
     if lastValidScan is None and scan != lastValidScan:
       lastValidScan = scan
-      print(scan)
+      helpers.handleNewScan(scan)
     elif scan.data == lastValidScan:
-      handleDuplicateScan()
+      helpers.handleDuplicateScan()
