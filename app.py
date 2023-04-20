@@ -4,11 +4,11 @@ import time
 import os
 
 myServo = Servo(
-  PWM=os.environ['SERVO_PWM_PIN'],
-  freq=os.environ['SERVO_PWM_FREQ'],
-  dc_min=os.environ['SERVO_DC_MIN'],
-  dc_neut=os.environ['SERVO_DC_NEUT'],
-  dc_max=os.environ['SERVO_DC_MAX']
+  PWM=int(os.environ['SERVO_PWM_PIN']),
+  freq=int(os.environ['SERVO_PWM_FREQ']),
+  dc_min=float(os.environ['SERVO_DC_MIN']),
+  dc_neut=float(os.environ['SERVO_DC_NEUT']),
+  dc_max=float(os.environ['SERVO_DC_MAX'])
 )
 myServo.init()
 
@@ -27,7 +27,7 @@ time.sleep(1)
 myServo.cleanup()
 
 # scanner testing code
-myScanner = Scanner(os.environ['SCANNER_PORT'], os.environ['SCANNER_BAUDRATE'])
+myScanner = Scanner(os.environ['SCANNER_PORT'], int(os.environ['SCANNER_BAUDRATE']))
 
 prevScan = None
 while True:
