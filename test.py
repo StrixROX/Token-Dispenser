@@ -3,16 +3,15 @@ from Scanner import Scanner
 import time
 import os
 
+# servo testing code
 myServo = Servo(
   PWM=int(os.environ['SERVO_PWM_PIN']),
   freq=int(os.environ['SERVO_PWM_FREQ']),
   dc_min=float(os.environ['SERVO_DC_MIN']),
   dc_neut=float(os.environ['SERVO_DC_NEUT']),
   dc_max=float(os.environ['SERVO_DC_MAX'])
-)
-myServo.init()
+).init()
 
-# servo testing code
 myServo.setAngle(0)
 time.sleep(1)
 myServo.setAngle(90)
