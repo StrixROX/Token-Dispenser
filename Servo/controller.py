@@ -14,9 +14,8 @@ dc_neut = 7.45
 dc_max = 11.80
 '''
 
-# TODO: error handling
 class ServoController:
-    def __init__(self, PWM:int, freq:int, dc_min:float, dc_neut:float, dc_max:float):
+    def __init__(self, PWM:int, freq:int, dc_min:float, dc_neut:float, dc_max:float) -> None:
         self.PWM = PWM
         self.freq = freq
         self.dc_min = dc_min
@@ -26,7 +25,7 @@ class ServoController:
         self.is_ready = False
         self.position = None # always from -90 to 90, both inclusive
 
-    def init(self):
+    def init(self) -> None:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.PWM, GPIO.OUT)
 
@@ -40,9 +39,7 @@ class ServoController:
         self.is_ready = True
         self.position = 0
 
-        return self
-
-    def cleanup(self):
+    def cleanup(self) -> None:
         print("Cleaning up...")
         self.servo.stop()
         GPIO.cleanup()
@@ -50,7 +47,7 @@ class ServoController:
 
         self.is_ready = False
 
-    def setAngle(self, deg:float, mode:int = 1):
+    def setAngle(self, deg:float, mode:int = 1) -> None:
         # mode 1: deg input is from 0 to 180
         # mode 2: deg input is from -90 to 90
         

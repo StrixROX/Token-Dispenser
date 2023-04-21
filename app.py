@@ -10,7 +10,8 @@ servo = Servo(
   dc_min=float(os.environ['SERVO_DC_MIN']),
   dc_neut=float(os.environ['SERVO_DC_NEUT']),
   dc_max=float(os.environ['SERVO_DC_MAX'])
-).init()
+)
+servo.init()
 
 scanner = Scanner(
   port=str(os.environ['SCANNER_PORT']),
