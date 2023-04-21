@@ -51,11 +51,16 @@ class ServoController:
         self.is_ready = False
 
     def setAngle(self, deg:float, mode:int = 1):
+        # mode 1: deg input is from 0 to 180
+        # mode 2: deg input is from -90 to 90
+        
         if mode == 1:
-            # mode 1: deg input is from 0 to 180
+            if deg < 0 or deg > 180:
+                raise ValueError("Mode=1: Input angle should be between 0 and 180, both inclusive.")
             pos = deg - 90
         elif mode == 2:
-            # mode 2: deg input is from -90 to 90
+            if deg < -90 or deg > 90:
+                raise ValueError("Mode=2: Input angle should be between -90 and 90, both inclusive.")
             pos = deg
 
         pos = min(max(pos, -90), 90) # limiting value between -90 and 90
