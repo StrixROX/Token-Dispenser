@@ -42,5 +42,5 @@ class StudentQR:
       raise ValueError("Invalid QR")
     
     self.name = data[0]
-    self.roll = data[1]
+    self.roll_no = data[1]
     self.hash = data[2]
