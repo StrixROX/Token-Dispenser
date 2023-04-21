@@ -1,3 +1,4 @@
+from Servo import ServoController
 from Scanner.types import QRPayload
 from random import randint
 
@@ -12,9 +13,16 @@ def validateQRData(data:QRPayload):
     print("NOT OK")
     return False
 
+def dropNextToken(servo:ServoController):
+  if servo.position == 0:
+    servo.setAngle(90, mode=2)
+  elif servo.position == 90:
+    servo.setAngle(0, mode=2)
+
 def saveToDatabase(data:QRPayload):
   # logic to save data to database
   print("Saving to DB")
+  return True
 
 def handleInvalidScan():
   # logic to handle invalid qr being scanned
@@ -23,10 +31,13 @@ def handleInvalidScan():
 def handleDuplicateScan():
   print("QR already scanned.")
 
-def handleNewScan(data:QRPayload):
+def handleNewScan(servo:ServoController, data:QRPayload):
   is_valid = validateQRData(data)
   
   if is_valid:
-    saveToDatabase(data)
+    did_save = saveToDatabase(data)
+
+    if did_save:
+      dropNextToken(servo)
   else:
     handleInvalidScan()

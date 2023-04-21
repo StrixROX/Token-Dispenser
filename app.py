@@ -25,6 +25,6 @@ while servo.is_ready and scanner.is_ready:
   if scan.status == 1:
     if lastValidScan is None and scan != lastValidScan:
       lastValidScan = scan
-      helpers.handleNewScan(scan)
+      helpers.handleNewScan(servo, scan)
     elif scan.data == lastValidScan:
       helpers.handleDuplicateScan()
