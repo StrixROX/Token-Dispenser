@@ -50,23 +50,30 @@ class ServoController:
 
         self.is_ready = False
 
-    def setAngle(self, deg:float):
-        deg = min(max(deg - 90, -90), 90) # limiting value between -90 and 90
+    def setAngle(self, deg:float, mode:int = 1):
+        if mode == 1:
+            # mode 1: deg input is from 0 to 180
+            pos = deg - 90
+        elif mode == 2:
+            # mode 2: deg input is from -90 to 90
+            pos = deg
+
+        pos = min(max(pos, -90), 90) # limiting value between -90 and 90
 
         # this style of code allows us to use different
         # slopes for interpolating intermediate duty cycle values
         d1 = self.dc_neut - self.dc_min
         d2 = self.dc_max - self.dc_neut
 
-        if deg == -90:
+        if pos == -90:
             self.servo.ChangeDutyCycle(self.dc_min)
-        elif deg == 0:
+        elif pos == 0:
             self.servo.ChangeDutyCycle(self.dc_neut)
-        elif deg == 90:
+        elif pos == 90:
             self.servo.ChangeDutyCycle(self.dc_max)
-        elif deg < 0:
-            self.servo.ChangeDutyCycle(self.dc_neut + (deg / 90) * d2)
-        elif deg > 0:
-            self.servo.ChangeDutyCycle(self.dc_neut + (deg / 90) * d2)
+        elif pos < 0:
+            self.servo.ChangeDutyCycle(self.dc_neut + (pos / 90) * d2)
+        elif pos > 0:
+            self.servo.ChangeDutyCycle(self.dc_neut + (pos / 90) * d2)
         
-        self.position = deg
+        self.position = pos
