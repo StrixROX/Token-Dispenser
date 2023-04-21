@@ -4,7 +4,7 @@ import serial
 import time
 
 class Scanner:
-  def __init__(self, port:str, baudrate:int):
+  def __init__(self, port:str, baudrate:int) -> None:
     self.PORT = port
     self.BAUDRATE = baudrate
     self.TIMEOUT = 0.11 # read timeout (1/9)s
@@ -17,7 +17,7 @@ class Scanner:
 
     self.__serialConnect()
   
-  def __serialConnect(self):
+  def __serialConnect(self) -> None:
     while self.ser is None:
       try:
         print(f"Attempting serial connection to QR scanner at port '{self.PORT}' (baudrate: '{self.BAUDRATE}')")
@@ -33,7 +33,7 @@ class Scanner:
       print("! Scanner ready.\n")
       self.is_ready = True
   
-  def readNext(self):
+  def readNext(self) -> QRPayload:
     if self.ser is None or not self.ser.is_open:
       print("! Unable to access serial connection to Scanner.")
       print("Trying to esatblish connection again...\n")
@@ -57,7 +57,7 @@ class Scanner:
 
     return QRPayload(status, msg)
   
-  def close(self):
+  def close(self) -> None:
     if self.ser is not None:
       self.ser.close()
     
