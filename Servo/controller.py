@@ -24,7 +24,7 @@ class ServoController:
         self.dc_max = dc_max
 
         self.is_ready = False
-        self.position = None
+        self.position = None # always from -90 to 90, both inclusive
 
     def init(self):
         GPIO.setmode(GPIO.BOARD)
