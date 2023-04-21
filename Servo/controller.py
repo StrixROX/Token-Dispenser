@@ -24,6 +24,7 @@ class ServoController:
         self.dc_max = dc_max
 
         self.is_ready = False
+        self.position = None
 
     def init(self):
         GPIO.setmode(GPIO.BOARD)
@@ -37,6 +38,7 @@ class ServoController:
         time.sleep(1)
         
         self.is_ready = True
+        self.position = 0
 
         return self
 
@@ -66,3 +68,5 @@ class ServoController:
             self.servo.ChangeDutyCycle(self.dc_neut + (deg / 90) * d2)
         elif deg > 0:
             self.servo.ChangeDutyCycle(self.dc_neut + (deg / 90) * d2)
+        
+        self.position = deg
