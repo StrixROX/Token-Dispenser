@@ -2,6 +2,7 @@ from Servo import ServoController
 from Scanner.types import QRPayload, StudentQR
 from DatabaseConnector import DatabaseConnector
 
+# TODO: implement params
 db = DatabaseConnector()
 
 registeredStudents = db.getTable('registered_students')
@@ -9,13 +10,13 @@ if registeredStudents is None:
   # TODO: create new registered_students table
   registeredStudents = []
 
-def dropNextToken(servo:ServoController):
+def dropNextToken(servo:ServoController) -> None:
   if servo.position == 0:
     servo.setAngle(90, mode=2)
   elif servo.position == 90:
     servo.setAngle(0, mode=2)
 
-def checkRegistered(qr:StudentQR):
+def checkRegistered(qr:StudentQR) -> bool:
   # TODO: optimize search
   for stud in registeredStudents:
     if stud['roll_no'] == qr.roll_no.upper() and stud['name'] == qr.name.upper() and stud['hash'] == qr.hash:
@@ -23,11 +24,11 @@ def checkRegistered(qr:StudentQR):
 
   return False
 
-def logScan(qr:StudentQR):
+def logScan(qr:StudentQR) -> bool:
   # TODO: log scan if not scanned already for current meal
   return True
 
-def handleInvalidScan(level:int):
+def handleInvalidScan(level:int) -> None:
   # level 1: qr itself is not a valid StudentQR
   # level 2: qr is valid StudentQR but it is not registered in the db
   # level 3: qr is valid StudentQR and student is registered in the db
@@ -38,7 +39,7 @@ def handleInvalidScan(level:int):
   # different LED codes go here
   print("Invalid QR code")
 
-def handleNewScan(servo:ServoController, payload:QRPayload):
+def handleNewScan(servo:ServoController, payload:QRPayload) -> None:
   try:
     qr = StudentQR(payload)
     
