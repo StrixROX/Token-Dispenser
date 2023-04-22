@@ -41,6 +41,15 @@ class StudentQR:
     if not all(checks):
       raise ValueError("Invalid QR")
     
-    self.name = data[0]
-    self.roll_no = data[1]
+    self.name = data[0].upper()
+    self.roll_no = data[1].upper()
     self.hash = data[2]
+  
+  def __eq__(self, __value:object) -> bool:
+    if not isinstance(__value, StudentQR):
+      return False
+
+    if self.name == __value.name and self.roll_no == __value.roll_no and self.hash == __value.hash:
+      return True
+
+    return False
