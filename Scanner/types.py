@@ -4,7 +4,7 @@ from typing import Union
 import re
 
 class SerialMessage:
-  def __init__(self, msg:Union[str, bytes]):
+  def __init__(self, msg:Union[str, bytes]) -> None:
     if isinstance(msg, str):
       self.bytes = msg.encode()
       self.str = msg
@@ -12,19 +12,19 @@ class SerialMessage:
       self.bytes = msg
       self.str = msg.decode()
   
-  def __str__(self):
+  def __str__(self) -> str:
     return self.str
 
 class QRPayload:
-  def __init__(self, status:int , data:str):
+  def __init__(self, status:int , data:str) -> None:
     self.status = status
     self.data = data
   
-  def __str__(self):
+  def __str__(self) -> str:
     return self.data
 
 class StudentQR:
-  def __init__(self, payload:QRPayload):
+  def __init__(self, payload:QRPayload) -> None:
     if payload.status == 0:
       raise ValueError("Error scanning QR.")
     
