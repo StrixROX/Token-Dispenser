@@ -46,6 +46,11 @@ class DatabaseConnector:
 
     return table_data
 
+  def createTable(self, query: str) -> None:
+      #Creates a new table in the database
+      self.cursor.execute(query)
+      self.conn.commit()
+
   def executeSelectQuery(self, query: str) -> List[any]:
       #retrieves all necessary data if it exists
       #returns empty list otherwise
