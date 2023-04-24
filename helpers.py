@@ -17,11 +17,11 @@ def dropNextToken(servo:ServoController) -> None:
   elif servo.position == 90:
     servo.setAngle(0, mode=2)
 
-def checkRegistered(qr:StudentQR) -> bool:
-  # TODO: optimize search
-  for stud in registeredStudents:
-    if stud['roll_number'] == qr.roll_no.upper() and stud['qrcode'] == qr.hash:
-      return True
+def checkRegistered(self, qr:StudentQR) -> bool:
+  # optimize search
+  self.cursor.execute(f"SELECT * FROM registered_students WHERE (qrcode = {qr.hash} AND roll_number = qr.roll_no)")
+  if self.cursor.fetchone():
+    return True
 
   return False
 
@@ -30,8 +30,20 @@ def clearTable(self, tableName: str):
   self.conn.commit()
   print(f"The table '{tableName}' has been cleared.")
 
-def logScan(qr:StudentQR) -> bool:
+def logScan(self, qr:StudentQR) -> bool:
   # TODO: log scan if not scanned already for current meal
+  now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+  # Check if QR code exists in the table
+  self.cursor.execute(f"SELECT * FROM mess_attendance WHERE qrcode='{qr.hash}'")
+  if self.cursor.fetchone():
+    print("qr already scanned")
+    return False
+
+  # Insert scan data into the mess_attendance table
+  self.cursor.execute(f"INSERT INTO mess_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, {qr.hash}, {now})")
+  self.conn.commit()
+  print(f"The scan data {qr} has been logged for {meal_time}.")
   return True
 
 def handleInvalidScan(level:int) -> None:
