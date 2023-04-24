@@ -6,17 +6,14 @@ import sqlite3
 import datetime
 import os
 
-db_path = os.path.join(os.getcwd(), "engineering_practicum.db")
-conn = sqlite3.connect(db_path)
-cursor = conn.cursor()
-
 #creating an instance DatabaseConnector
 db = DatabaseConnector()
 
 registeredStudents = db.getTable('registered_students')
+
 if registeredStudents is None:
   # Create new registered_students table
-  query = "CREATE TABLE IF NOT EXISTS registered_students (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT NOT NULL, last_name TEXT NOT NULL, roll_number TEXT NOT NULL, qrcode TEXT NOT NULL);"
+  query = "CREATE TABLE IF NOT EXISTS registered_students (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, roll_number TEXT NOT NULL, qrcode TEXT NOT NULL);"
   registeredStudents = db.createTable(query)
 
 def dropNextToken(servo:ServoController) -> None:
@@ -27,32 +24,54 @@ def dropNextToken(servo:ServoController) -> None:
 
 def checkRegistered(qr:StudentQR) -> bool:
   # optimize search
-  cursor.execute(f"SELECT * FROM registered_students WHERE (qrcode = {qr.hash} AND roll_number = qr.roll_no)")
-  if cursor.fetchone():
-    return True
+  for stud in registeredStudents:
+    if stud['roll_number'] == qr.roll_no.upper() and stud['name'] == qr.name.upper() and stud['qrcode'] == qr.hash:
+      return True
 
   return False
 
 def clearTable(tableName: str):
-  cursor.execute(f"DELETE FROM {tableName}")
-  conn.commit()
+  db.cursor.execute(f"DELETE FROM {tableName}")
+  db.conn.commit()
   print(f"The table '{tableName}' has been cleared.")
 
 def logScan(qr:StudentQR) -> bool:
   # TODO: log scan if not scanned already for current meal
   now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-  # Check if QR code exists in the table
-  cursor.execute(f"SELECT * FROM mess_attendance WHERE qrcode='{qr.hash}'")
-  if cursor.fetchone():
-    print("qr already scanned")
+  day = now.strftime('%A')
+  weekend = ['Saturday', 'Sunday']
+
+  meal_slots_weekdays = [['7:45:00', '10:30:00'], ['12:15:00', '14:30:00'], ['19:45:00', '22:30:00']]
+  meal_slots_weekends = [['7:45:00', '11:00:00'], ['12:15:00', '15:00:00'], ['19:45:00', '23:00:00']]
+
+  if day in weekend:
+    mealSlot = meal_slots_weekends
+  else:
+    mealSlot = meal_slots_weekdays
+
+  # check if current time is within any meal slot
+  now_time = now.time()
+  for slot in mealSlots:
+    start_time = datetime.strptime(slot[0], '%H:%M:%S').time()
+    end_time = datetime.strptime(slot[1], '%H:%M:%S').time()
+    if start_time <= now_time <= end_time:
+        # check if QR code exists in the table
+        db.cursor.execute(f"SELECT * FROM meal_attendance WHERE qrcode='{qr.hash}'")
+        if db.cursor.fetchone():
+            print("QR code already scanned.")
+            return False
+
+        # insert scan data into the meal_attendance table
+        db.cursor.execute(f"INSERT INTO meal_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, '{qr.hash}', '{now}')")
+        db.conn.commit()
+        print(f"The scan data {qr} has been logged for {slot}.")
+        return True
+
+    print("Not within meal time slot.")
     return False
 
-  # Insert scan data into the mess_attendance table
-  cursor.execute(f"INSERT INTO mess_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, {qr.hash}, {now})")
-  conn.commit()
-  print(f"The scan data {qr} has been logged for {meal_time}.")
-  return True
+  # TODO: when to clear the meal_attendance table
 
 def handleInvalidScan(level:int) -> None:
   # level 1: qr itself is not a valid StudentQR
