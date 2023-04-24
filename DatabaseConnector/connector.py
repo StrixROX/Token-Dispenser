@@ -1,45 +1,64 @@
-from typing import Union, List
+from typing import Union
 import sqlite3
 import os
 
-# TODO: implement the functions
+import helpers
+
 class DatabaseConnector:
-  def __init__(self) -> None:
-    db_path = os.path.join(os.getcwd(), "engineering_practicum.db")
-    self.conn = sqlite3.connect(db_path)
-    self.cursor = self.conn.cursor()
+  def __init__(self, dbName:str) -> None:
+    self.is_connected = False
+    self.__db = None
+    self.__cur = None
+
+    if os.path.exists(helpers.getAbsolutePath(dbName)):
+      try:
+        self.__db = sqlite3.connect(os.path.join(os.getcwd(), dbName))
+        self.__cur = self.__db.cursor()
+      except sqlite3.Error as err:
+        Exception(f"Error while connecting to database: {dbName}.")
+    else:
+      raise Exception(f"Database does not exist: {dbName}.")
 
   def loadDataFolder(self) -> None:
-    print('Loading data...')
+    print('Loading data from data folder...')
 
-    if not os.path.exists('data'):
-      os.mkdir('data')
+    if not os.path.exists(helpers.getAbsolutePath('data')):
+      os.mkdir(helpers.getAbsolutePath('data'))
 
-    for filename in os.listdir('data'):
-      with open(f'data/{filename}', 'r') as f:
-        sql = f.read()
-        self.cursor.execute(sql)
-        print(f"Executed SQL command from the file {filename}")
+    dataFiles = os.listdir(helpers.getAbsolutePath('data'))
+    
+    if len(dataFiles) == 0:
+      print("No files to load.")
+      quit()
 
-    self.conn.commit()
+    for file in dataFiles:
+      print(f"Loading {file}...")
+      with open(helpers.getAbsolutePath(f"data/{file}"), 'r') as f:
+        sqlScript = f.read()
+        try:
+          self.__cur.executescript(sqlScript)
+        except sqlite3.Error as err:
+          print(f"Error while loading {file}.")
+
+    self.__db.commit()
 
   def getTable(self, tableName:str) -> Union[list, None]:
     # returns list of table rows
     # or None if table doesn't exist
 
     # Check if the table exists
-    self.cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'")
-    if not self.cursor.fetchone():
+    self.__cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'")
+    if not self.__cur.fetchone():
         print(f"The table '{tableName}' does not exist in the database.")
         return None
 
     # Retrieve all rows from the table
-    self.cursor.execute(f"SELECT * FROM {tableName}")
-    rows = self.cursor.fetchall()
+    self.__cur.execute(f"SELECT * FROM {tableName}")
+    rows = self.__cur.fetchall()
 
     # Get the column names from the table's PRAGMA statement
-    self.cursor.execute(f"PRAGMA table_info({tableName})")
-    column_names = [column[1] for column in self.cursor.fetchall()]
+    self.__cur.execute(f"PRAGMA table_info({tableName})")
+    column_names = [column[1] for column in self.__cur.fetchall()]
 
     # Combine the column names with the rows to create a list of dictionaries
     table_data = [dict(zip(column_names, row)) for row in rows]
@@ -48,19 +67,22 @@ class DatabaseConnector:
 
   def createTable(self, query:str) -> None:
       #Creates a new table in the database
-      self.cursor.execute(query)
-      self.conn.commit()
+      self.__cur.execute(query)
+      self.__db.commit()
 
-  def executeSelectQuery(self, query:str) -> List[any]:
+  def executeSelectQuery(self, query:str) -> list:
       #retrieves all necessary data if it exists
       #returns empty list otherwise
-      self.cursor.execute(query)
-      rows = self.cursor.fetchall()
+      self.__cur.execute(query)
+      rows = self.__cur.fetchall()
       result = [list(row) for row in rows]
-      self.conn.commit()
+      self.__db.commit()
       return result
 
   def executeQuery(self, query:str) -> None:
       # Inserts/Updates/Deletes from a table
-      self.cursor.execute(query)
-      self.conn.commit()
+      self.__cur.execute(query)
+      self.__db.commit()
+
+# temp = DatabaseConnector('easf')
+# print(temp)
