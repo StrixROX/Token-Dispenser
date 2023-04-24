@@ -1,6 +1,14 @@
 from Servo import ServoController
 from Scanner.types import QRPayload, StudentQR
 from DatabaseConnector import DatabaseConnector
+from typing import List
+import sqlite3
+import datetime
+import os
+
+db_path = os.path.join(os.getcwd(), "engineering_practicum.db")
+conn = sqlite3.connect(db_path)
+cursor = conn.cursor()
 
 #creating an instance DatabaseConnector
 db = DatabaseConnector()
@@ -17,32 +25,32 @@ def dropNextToken(servo:ServoController) -> None:
   elif servo.position == 90:
     servo.setAngle(0, mode=2)
 
-def checkRegistered(self, qr:StudentQR) -> bool:
+def checkRegistered(qr:StudentQR) -> bool:
   # optimize search
-  self.cursor.execute(f"SELECT * FROM registered_students WHERE (qrcode = {qr.hash} AND roll_number = qr.roll_no)")
-  if self.cursor.fetchone():
+  cursor.execute(f"SELECT * FROM registered_students WHERE (qrcode = {qr.hash} AND roll_number = qr.roll_no)")
+  if cursor.fetchone():
     return True
 
   return False
 
-def clearTable(self, tableName: str):
-  self.cursor.execute(f"DELETE FROM {tableName}")
-  self.conn.commit()
+def clearTable(tableName: str):
+  cursor.execute(f"DELETE FROM {tableName}")
+  conn.commit()
   print(f"The table '{tableName}' has been cleared.")
 
-def logScan(self, qr:StudentQR) -> bool:
+def logScan(qr:StudentQR) -> bool:
   # TODO: log scan if not scanned already for current meal
   now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
   # Check if QR code exists in the table
-  self.cursor.execute(f"SELECT * FROM mess_attendance WHERE qrcode='{qr.hash}'")
-  if self.cursor.fetchone():
+  cursor.execute(f"SELECT * FROM mess_attendance WHERE qrcode='{qr.hash}'")
+  if cursor.fetchone():
     print("qr already scanned")
     return False
 
   # Insert scan data into the mess_attendance table
-  self.cursor.execute(f"INSERT INTO mess_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, {qr.hash}, {now})")
-  self.conn.commit()
+  cursor.execute(f"INSERT INTO mess_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, {qr.hash}, {now})")
+  conn.commit()
   print(f"The scan data {qr} has been logged for {meal_time}.")
   return True
 
