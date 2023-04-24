@@ -2,13 +2,14 @@ from Servo import ServoController
 from Scanner.types import QRPayload, StudentQR
 from DatabaseConnector import DatabaseConnector
 
-# TODO: implement params
+#creating an instance DatabaseConnector
 db = DatabaseConnector()
 
 registeredStudents = db.getTable('registered_students')
 if registeredStudents is None:
-  # TODO: create new registered_students table
-  registeredStudents = []
+  # TODO: Create new registered_students table
+  query = "CREATE TABLE IF NOT EXISTS registered_students (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT NOT NULL, last_name TEXT NOT NULL, roll_number TEXT NOT NULL, qrcode TEXT NOT NULL);"
+  registeredStudents = db.createTable(query)
 
 def dropNextToken(servo:ServoController) -> None:
   if servo.position == 0:
@@ -19,7 +20,7 @@ def dropNextToken(servo:ServoController) -> None:
 def checkRegistered(qr:StudentQR) -> bool:
   # TODO: optimize search
   for stud in registeredStudents:
-    if stud['roll_no'] == qr.roll_no.upper() and stud['name'] == qr.name.upper() and stud['hash'] == qr.hash:
+    if stud['roll_number'] == qr.roll_no.upper() and stud['qrcode'] == qr.qrcode:
       return True
 
   return False
@@ -42,7 +43,7 @@ def handleInvalidScan(level:int) -> None:
 def handleNewScan(servo:ServoController, payload:QRPayload) -> None:
   try:
     qr = StudentQR(payload)
-    
+
     is_registered = checkRegistered(qr)
     if not is_registered:
       handleInvalidScan(2)
