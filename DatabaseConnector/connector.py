@@ -45,3 +45,29 @@ class DatabaseConnector:
     table_data = [dict(zip(column_names, row)) for row in rows]
 
     return table_data
+
+  def executeSelectQuery(self, query: str) -> List[any]:
+      #retrieves all necessary data if it exists
+      #returns empty list otherwise
+      self.cursor.execute(query)
+      rows = self.cursor.fetchall()
+      result = [list(row) for row in rows
+      self.conn.commit()
+      return result
+
+  def executeInsertQuery(self, query: str) -> None:
+      #Inserts new row(s) to the table
+      self.cursor.execute(query)
+      self.conn.commit()
+
+  def executeUpdateQuery(self, query: str) -> None:
+      #Updates the data if it exists
+      #returns None otherwise
+      self.cursor.execute(query)
+      self.conn.commit()
+
+  def executeDeleteQuery(self, query: str) -> None:
+      #Deletes any row(s) or table if it exists
+      #returns None otherwise
+      self.cursor.execute(query)
+      self.conn.commit()
