@@ -25,6 +25,11 @@ def checkRegistered(qr:StudentQR) -> bool:
 
   return False
 
+def clearTable(self, tableName: str):
+  self.cursor.execute(f"DELETE FROM {tableName}")
+  self.conn.commit()
+  print(f"The table '{tableName}' has been cleared.")
+
 def logScan(qr:StudentQR) -> bool:
   # TODO: log scan if not scanned already for current meal
   return True
