@@ -7,7 +7,7 @@ db = DatabaseConnector()
 
 registeredStudents = db.getTable('registered_students')
 if registeredStudents is None:
-  # TODO: Create new registered_students table
+  # Create new registered_students table
   query = "CREATE TABLE IF NOT EXISTS registered_students (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT NOT NULL, last_name TEXT NOT NULL, roll_number TEXT NOT NULL, qrcode TEXT NOT NULL);"
   registeredStudents = db.createTable(query)
 
@@ -20,7 +20,7 @@ def dropNextToken(servo:ServoController) -> None:
 def checkRegistered(qr:StudentQR) -> bool:
   # TODO: optimize search
   for stud in registeredStudents:
-    if stud['roll_number'] == qr.roll_no.upper() and stud['qrcode'] == qr.qrcode:
+    if stud['roll_number'] == qr.roll_no.upper() and stud['qrcode'] == qr.hash:
       return True
 
   return False
