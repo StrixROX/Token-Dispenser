@@ -60,22 +60,7 @@ class DatabaseConnector:
       self.conn.commit()
       return result
 
-  def executeInsertQuery(self, query:str) -> None:
-      #Inserts new row(s) to the table
+  def executeQuery(self, query:str) -> None:
+      # Inserts/Updates/Deletes from a table
       self.cursor.execute(query)
       self.conn.commit()
-
-  def executeUpdateQuery(self, query:str) -> None:
-      #Updates the data if it exists
-      #returns None otherwise
-      self.cursor.execute(query)
-      self.conn.commit()
-
-  def executeDeleteQuery(self, query:str) -> None:
-      #Deletes any row(s) or table if it exists
-      #returns None otherwise
-      self.cursor.execute(query)
-      self.conn.commit()
-
-db = DatabaseConnector()
-db.loadDataFolder()
