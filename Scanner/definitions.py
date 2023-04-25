@@ -34,8 +34,8 @@ class StudentQR:
 
     checks = [
       len(data[0]) != 0,
-      re.search('^[0-9]{4}[a-zA-Z]{2}[0-9]{2}$'.upper(), data[1].upper()),
-      re.search('^[a-b0-9]{32}$', data[2])
+      re.search('^[0-9]{4}[a-zA-Z]{2}[0-9]{2}$'.upper(), data[1].upper()) is not None,
+      re.search('^[a-z0-9]{32}$', data[2]) is not None
     ]
     
     if not all(checks):
