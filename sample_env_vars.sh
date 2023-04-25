@@ -8,7 +8,7 @@ export SERVO_DC_NEUT=7.45
 export SERVO_DC_MAX=11.80
 
 # ESP32-CAM QR Scanner Params
-export SCANNER_PORT='COM4'
+export SCANNER_PORT='/dev/ttyUSB0'
 export SCANNER_BAUDRATE=115200
 
 # Database
