@@ -92,7 +92,7 @@ class DatabaseConnector:
   def scanIsLogged(self, qr:StudentQR) -> bool:
     # check if QR code exists in the table
     self.__cur.execute(f"SELECT * FROM meal_attendance WHERE qrcode='{qr.hash}'")
-    res = self.__cur.fetchone()
+    res = self.__cur.fetchone() or []
     if len(res) != 0:
         print("QR code already scanned.")
         return True
