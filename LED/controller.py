@@ -16,9 +16,9 @@ class LEDController:
     for i in range(2):
       # blink twice
       GPIO.output(self.GPIO_PIN, GPIO.HIGH)
-      time.sleep(1)
+      time.sleep(0.2)
       GPIO.output(self.GPIO_PIN, GPIO.LOW)
-      time.sleep(1)
+      time.sleep(0.2)
 
     print("LED ready.")
     
