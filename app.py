@@ -19,11 +19,10 @@ scanner = Scanner(
 )
 
 lastValidScan = None
-scanCount = 0
 while servo.is_ready and scanner.is_ready:
   scan = scanner.readNext()
 
   if scan.status == 1:
-    if lastValidScan is None and scan != lastValidScan:
+    if lastValidScan is None or scan != lastValidScan:
       lastValidScan = scan
       helpers.handleNewScan(servo, scan)

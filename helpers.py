@@ -60,7 +60,7 @@ def handleInvalidScan(level:int) -> None:
 
   # TODO: logic to handle invalid qr being scanned
   # different LED codes go here
-  print("Invalid QR code")
+  print("Invalid QR code:", level)
 
 def handleNewScan(servo:ServoController, payload:QRPayload) -> None:
   try:
