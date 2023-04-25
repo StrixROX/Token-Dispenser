@@ -34,5 +34,5 @@ class LEDController:
 
     self.is_ready = False
   
-  def setState(self, state:bool):
+  def setState(self, state:bool) -> None:
     GPIO.output(self.GPIO_PIN, GPIO.HIGH if state else GPIO.LOW)

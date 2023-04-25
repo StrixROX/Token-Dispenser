@@ -38,6 +38,8 @@ for i in range(3):
   myLED.setState(False)
   time.sleep(0.5)
 
+myLED.cleanup()
+
 # scanner testing code
 myScanner = Scanner(os.environ['SCANNER_PORT'], int(os.environ['SCANNER_BAUDRATE']))
 
