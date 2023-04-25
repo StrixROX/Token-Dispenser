@@ -6,7 +6,7 @@ import datetime
 from Scanner.definitions import StudentQR
 
 def getAbsolutePath(relPath:str) -> str:
-  return os.path.join(os.path.realpath(__file__), relPath)
+  return os.path.join(os.getcwd(), relPath)
 
 class DatabaseConnector:
   def __init__(self, dbName:str) -> None:
@@ -16,7 +16,7 @@ class DatabaseConnector:
 
     if os.path.exists(getAbsolutePath(dbName)):
       try:
-        self.__db = sqlite3.connect(os.path.join(os.getcwd(), dbName))
+        self.__db = sqlite3.connect(getAbsolutePath(dbName))
         self.__cur = self.__db.cursor()
       except sqlite3.Error as err:
         Exception(f"Error while connecting to database: {dbName}.")
