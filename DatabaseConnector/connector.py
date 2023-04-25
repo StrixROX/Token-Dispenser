@@ -102,7 +102,7 @@ class DatabaseConnector:
   def logScan(self, qr:StudentQR, scanTime:datetime.time) -> bool:
     # insert scan data into the meal_attendance table
     try:
-      self.__cur.execute(f"INSERT INTO meal_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, '{qr.hash}', '{scanTime}')")
+      self.__cur.execute(f"INSERT INTO meal_attendance (roll_no, qrcode, timestamp) VALUES ('{qr.roll_no}', '{qr.hash}', '{scanTime.strftime('%H:%M:%S')}')")
       self.__db.commit()
       
       return True
