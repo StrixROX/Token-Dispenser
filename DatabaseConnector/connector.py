@@ -1,8 +1,10 @@
 from typing import Union
 import sqlite3
 import os
+import datetime
 
 import helpers
+from ..Scanner.types import StudentQR
 
 class DatabaseConnector:
   def __init__(self, dbName:str) -> None:
@@ -49,7 +51,7 @@ class DatabaseConnector:
     # Check if the table exists
     self.__cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'")
     if not self.__cur.fetchone():
-        print(f"The table '{tableName}' does not exist in the database.")
+        print(f"Table does not exist in the database: '{tableName}'.")
         return None
 
     # Retrieve all rows from the table
@@ -58,31 +60,49 @@ class DatabaseConnector:
 
     # Get the column names from the table's PRAGMA statement
     self.__cur.execute(f"PRAGMA table_info({tableName})")
-    column_names = [column[1] for column in self.__cur.fetchall()]
+    tableInfo = self.__cur.fetchall()
+    colNames = [x[1] for x in tableInfo]
 
     # Combine the column names with the rows to create a list of dictionaries
-    table_data = [dict(zip(column_names, row)) for row in rows]
+    tableData = [dict(zip(colNames, row)) for row in rows]
 
-    return table_data
+    return tableData
 
-  def createTable(self, query:str) -> None:
-      #Creates a new table in the database
-      self.__cur.execute(query)
+  # def createTable(self, query:str) -> None:
+  #     #Creates a new table in the database
+  #     self.__cur.execute(query)
+  #     self.__db.commit()
+
+  # def executeSelectQuery(self, query:str) -> list:
+  #     #retrieves all necessary data if it exists
+  #     #returns empty list otherwise
+  #     self.__cur.execute(query)
+  #     rows = self.__cur.fetchall()
+  #     result = [list(row) for row in rows]
+  #     self.__db.commit()
+  #     return result
+
+  # def executeQuery(self, query:str) -> None:
+  #     # Inserts/Updates/Deletes from a table
+  #     self.__cur.execute(query)
+  #     self.__db.commit()
+  
+  def scanIsLogged(self, qr:StudentQR) -> bool:
+    # check if QR code exists in the table
+    self.__cur.execute(f"SELECT * FROM meal_attendance WHERE qrcode='{qr.hash}'")
+    res = self.__cur.fetchone()
+    if len(res) != 0:
+        print("QR code already scanned.")
+        return True
+    
+    return False
+  
+  def logScan(self, qr:StudentQR, scanTime:datetime.time) -> bool:
+    # insert scan data into the meal_attendance table
+    try:
+      self.__cur.execute(f"INSERT INTO meal_attendance (roll_no, qrcode, timestamp) VALUES ({qr.roll_no}, '{qr.hash}', '{scanTime}')")
       self.__db.commit()
-
-  def executeSelectQuery(self, query:str) -> list:
-      #retrieves all necessary data if it exists
-      #returns empty list otherwise
-      self.__cur.execute(query)
-      rows = self.__cur.fetchall()
-      result = [list(row) for row in rows]
-      self.__db.commit()
-      return result
-
-  def executeQuery(self, query:str) -> None:
-      # Inserts/Updates/Deletes from a table
-      self.__cur.execute(query)
-      self.__db.commit()
-
-# temp = DatabaseConnector('easf')
-# print(temp)
+      
+      return True
+    except sqlite3.Error:
+      return False
