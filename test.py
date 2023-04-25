@@ -11,7 +11,8 @@ myServo = Servo(
   dc_min=float(os.environ['SERVO_DC_MIN']),
   dc_neut=float(os.environ['SERVO_DC_NEUT']),
   dc_max=float(os.environ['SERVO_DC_MAX'])
-).init()
+)
+myServo.init()
 
 myServo.setAngle(0)
 time.sleep(1)
