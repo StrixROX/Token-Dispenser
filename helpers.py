@@ -2,9 +2,10 @@ from Servo import ServoController
 from Scanner.definitions import QRPayload, StudentQR
 from DatabaseConnector import DatabaseConnector
 from definitions import MealTimings
-import datetime
 
 import os
+import datetime
+import time
 
 #creating an instance DatabaseConnector
 db = DatabaseConnector(os.environ['DB_NAME'])
@@ -51,31 +52,39 @@ def logScan(qr:StudentQR) -> bool:
   # TODO: when to clear the meal_attendance table
   # suggestion: linux cronjob
 
-def handleInvalidScan(level:int) -> None:
+def handleInvalidScan(level:int, indicatorLEDs:dict) -> None:
   # level 1: qr itself is not a valid StudentQR
   # level 2: qr is valid StudentQR but it is not registered in the db
   # level 3: qr is valid StudentQR and student is registered in the db
   # but qr is already scanned
   # level 4: any other error
 
-  # TODO: logic to handle invalid qr being scanned
-  # different LED codes go here
   print("Invalid QR code:", level)
+  indicatorLEDs['green'].setState(1)
+  time.sleep(0.2)
+  indicatorLEDs['green'].setState(0)
+  time.sleep(0.2)
+  indicatorLEDs['green'].setState(1)
+  time.sleep(0.2)
+  indicatorLEDs['green'].setState(0)
 
-def handleNewScan(servo:ServoController, payload:QRPayload) -> None:
+def handleNewScan(servo:ServoController, indicatorLEDs:dict, payload:QRPayload) -> None:
   try:
     qr = StudentQR(payload)
 
     is_registered = checkRegistered(qr)
     if not is_registered:
-      handleInvalidScan(2)
+      handleInvalidScan(2, indicatorLEDs)
 
     did_save = logScan(qr)
     if did_save:
       dropNextToken(servo)
+      indicatorLEDs['green'].setState(1)
+      time.sleep(1)
+      indicatorLEDs['green'].setState(0)
     else:
-      handleInvalidScan(3)
+      handleInvalidScan(3, indicatorLEDs)
   except ValueError:
-    handleInvalidScan(1)
+    handleInvalidScan(1, indicatorLEDs)
   except:
-    handleInvalidScan(4)
+    handleInvalidScan(4, indicatorLEDs)

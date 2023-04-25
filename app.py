@@ -1,5 +1,6 @@
 from Servo import ServoController as Servo
 from Scanner import Scanner
+from LED import LEDController
 import helpers
 
 import os
@@ -18,6 +19,13 @@ scanner = Scanner(
   baudrate=str(os.environ['SCANNER_BAUDRATE'])
 )
 
+indicatorLEDs = {
+  'green': LEDController(11),
+  'red': LEDController(13)
+}
+for led in indicatorLEDs.values():
+  led.init()
+
 lastValidScan = None
 while servo.is_ready and scanner.is_ready:
   try:
@@ -26,6 +34,8 @@ while servo.is_ready and scanner.is_ready:
     if scan.status == 1:
       if lastValidScan is None or scan != lastValidScan:
         lastValidScan = scan
-        helpers.handleNewScan(servo, scan)
+        helpers.handleNewScan(servo, indicatorLEDs, scan)
   except:
     servo.cleanup()
+    for led in indicatorLEDs.values():
+      led.cleanup()
