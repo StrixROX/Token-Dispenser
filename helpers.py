@@ -12,6 +12,19 @@ db = DatabaseConnector(os.environ['DB_NAME'])
 registeredStudents = db.getTable('registered_students')
 
 def dropNextToken(servo:ServoController) -> None:
+  # For sinlge hole disc
+  # if servo.position == 0:
+  #   servo.setAngle(90, mode=2)
+  # elif servo.position == -90:
+  #   servo.setAngle(0, mode=2)
+  #   time.sleep(0.5)
+  #   servo.setAngle(90, mode=2)
+  # elif servo.position == 90:
+  #   servo.setAngle(0, mode=2)
+  #   time.sleep(0.5)
+  #   servo.setAngle(-90, mode=2)
+
+  # For double hole disc
   if servo.position == 0:
     servo.setAngle(90, mode=2)
   elif servo.position == 90:
