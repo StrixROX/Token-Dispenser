@@ -1,5 +1,5 @@
 from Servo import ServoController
-from Scanner.types import QRPayload, StudentQR
+from Scanner.definitions import QRPayload, StudentQR
 from DatabaseConnector import DatabaseConnector
 from definitions import MealTimings
 import datetime

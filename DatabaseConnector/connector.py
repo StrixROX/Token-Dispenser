@@ -4,7 +4,7 @@ import os
 import datetime
 
 import helpers
-from ..Scanner.types import StudentQR
+from ..Scanner.definitions import StudentQR
 
 class DatabaseConnector:
   def __init__(self, dbName:str) -> None:

@@ -1,4 +1,4 @@
-from .types import SerialMessage, QRPayload
+from .definitions import SerialMessage, QRPayload
 
 import serial
 import time
