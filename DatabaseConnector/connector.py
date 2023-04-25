@@ -3,8 +3,10 @@ import sqlite3
 import os
 import datetime
 
-from .helpers import getAbsolutePath
 from Scanner.definitions import StudentQR
+
+def getAbsolutePath(relPath:str) -> str:
+  return os.path.join(os.path.realpath(__file__), relPath)
 
 class DatabaseConnector:
   def __init__(self, dbName:str) -> None:
