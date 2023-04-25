@@ -1,3 +1,5 @@
+export IS_DEMONSTRATION=True
+
 # Servo Params
 export SERVO_PWM_PIN=32
 export SERVO_PWM_FREQ=50
