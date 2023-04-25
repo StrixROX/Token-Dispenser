@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS meal_attendance (
-    roll_no TEXT NOT NULL,
-    qrcode TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
