@@ -1,5 +1,6 @@
 from Servo import ServoController as Servo
 from Scanner import Scanner
+from LED import LEDController as LED
 import time
 import os
 
@@ -24,6 +25,17 @@ myServo.setAngle(0)
 time.sleep(1)
 
 myServo.cleanup()
+
+# LED testing code
+myLED = LED(11)
+myLED.init()
+
+print(f"Testing LED at PIN: {myLED.GPIO_PIN}.")
+for i in range(3):
+  myLED.setState(True)
+  time.sleep(0.5)
+  myLED.setState(False)
+  time.sleep(0.5)
 
 # scanner testing code
 myScanner = Scanner(os.environ['SCANNER_PORT'], int(os.environ['SCANNER_BAUDRATE']))
