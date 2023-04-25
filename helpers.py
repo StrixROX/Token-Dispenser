@@ -46,7 +46,7 @@ def logScan(qr:StudentQR) -> bool:
         return db.logScan(qr, now)
 
     print("Not within meal time slot.")
-    return False
+  return False
 
   # TODO: when to clear the meal_attendance table
   # suggestion: linux cronjob
