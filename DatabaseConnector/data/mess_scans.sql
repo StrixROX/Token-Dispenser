@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS mess_scan_data (
+CREATE TABLE mess_scans (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   student_id INTEGER NOT NULL,
   scan_datetime DATETIME NOT NULL,
