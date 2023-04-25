@@ -4,8 +4,10 @@ from DatabaseConnector import DatabaseConnector
 from definitions import MealTimings
 import datetime
 
+import os
+
 #creating an instance DatabaseConnector
-db = DatabaseConnector('engineering_practicum.db')
+db = DatabaseConnector(os.environ['DB_NAME'])
 registeredStudents = db.getTable('registered_students')
 
 def dropNextToken(servo:ServoController) -> None:
