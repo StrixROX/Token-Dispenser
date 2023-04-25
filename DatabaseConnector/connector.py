@@ -3,8 +3,8 @@ import sqlite3
 import os
 import datetime
 
-import helpers
-from ..Scanner.definitions import StudentQR
+from .helpers import getAbsolutePath
+from Scanner.definitions import StudentQR
 
 class DatabaseConnector:
   def __init__(self, dbName:str) -> None:
@@ -12,7 +12,7 @@ class DatabaseConnector:
     self.__db = None
     self.__cur = None
 
-    if os.path.exists(helpers.getAbsolutePath(dbName)):
+    if os.path.exists(getAbsolutePath(dbName)):
       try:
         self.__db = sqlite3.connect(os.path.join(os.getcwd(), dbName))
         self.__cur = self.__db.cursor()
@@ -24,10 +24,10 @@ class DatabaseConnector:
   def loadDataFolder(self) -> None:
     print('Loading data from data folder...')
 
-    if not os.path.exists(helpers.getAbsolutePath('data')):
-      os.mkdir(helpers.getAbsolutePath('data'))
+    if not os.path.exists(getAbsolutePath('data')):
+      os.mkdir(getAbsolutePath('data'))
 
-    dataFiles = os.listdir(helpers.getAbsolutePath('data'))
+    dataFiles = os.listdir(getAbsolutePath('data'))
     
     if len(dataFiles) == 0:
       print("No files to load.")
@@ -35,7 +35,7 @@ class DatabaseConnector:
 
     for file in dataFiles:
       print(f"Loading {file}...")
-      with open(helpers.getAbsolutePath(f"data/{file}"), 'r') as f:
+      with open(getAbsolutePath(f"data/{file}"), 'r') as f:
         sqlScript = f.read()
         try:
           self.__cur.executescript(sqlScript)
