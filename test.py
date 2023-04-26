@@ -30,6 +30,8 @@ myServo.cleanup()
 # LED testing code
 myLED = LED(11)
 myLED.init()
+myLED2 = LED(13)
+myLED2.init()
 
 print(f"Testing LED at PIN: {myLED.GPIO_PIN}.")
 for i in range(3):
@@ -38,7 +40,13 @@ for i in range(3):
   myLED.setState(False)
   time.sleep(0.5)
 
+  myLED2.setState(True)
+  time.sleep(0.5)
+  myLED2.setState(False)
+  time.sleep(0.5)
+
 myLED.cleanup()
+myLED2.cleanup()
 
 # scanner testing code
 myScanner = Scanner(os.environ['SCANNER_PORT'], int(os.environ['SCANNER_BAUDRATE']))
