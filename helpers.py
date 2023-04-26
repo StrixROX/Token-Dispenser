@@ -53,6 +53,10 @@ def logScan(qr:StudentQR) -> bool:
     slotStart = datetime.datetime.strptime(slot[0], '%H:%M:%S').time()
     slotEnd = datetime.datetime.strptime(slot[1], '%H:%M:%S').time()
     if eval(os.environ['IS_DEMONSTRATION']) or slotStart <= nowTime <= slotEnd:
+        # check if student is registered
+        if not checkRegistered(qr):
+          return False
+        
         # check if QR code exists in the table
         if db.scanIsLogged(qr):
           return False
