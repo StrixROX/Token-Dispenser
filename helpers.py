@@ -77,13 +77,13 @@ def handleInvalidScan(level:int, indicatorLEDs:dict) -> None:
   # level 4: any other error
 
   print("Invalid QR code:", level)
-  indicatorLEDs['green'].setState(1)
+
+  if level == 1:
+    return None
+
+  indicatorLEDs['red'].setState(1)
   time.sleep(0.5)
-  indicatorLEDs['green'].setState(0)
-  time.sleep(0.5)
-  indicatorLEDs['green'].setState(1)
-  time.sleep(0.5)
-  indicatorLEDs['green'].setState(0)
+  indicatorLEDs['red'].setState(0)
 
 def handleNewScan(servo:ServoController, indicatorLEDs:dict, payload:QRPayload) -> None:
   try:
