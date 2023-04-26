@@ -11,5 +11,9 @@ export SERVO_DC_MAX=11.80
 export SCANNER_PORT='/dev/ttyUSB0'
 export SCANNER_BAUDRATE=115200
 
+# LED Indicators
+export LED_GREEN_PIN=11
+export LED_RED_PIN=13
+
 # Database
 export DB_NAME='engineering_practicum.db'

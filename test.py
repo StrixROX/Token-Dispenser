@@ -28,9 +28,9 @@ time.sleep(1)
 myServo.cleanup()
 
 # LED testing code
-myLED = LED(11)
+myLED = LED(int(os.environ['LED_GREEN_PIN']))
 myLED.init()
-myLED2 = LED(13)
+myLED2 = LED(int(os.environ['LED_RED_PIN']))
 myLED2.init()
 
 print(f"Testing LED at PIN: {myLED.GPIO_PIN}.")
